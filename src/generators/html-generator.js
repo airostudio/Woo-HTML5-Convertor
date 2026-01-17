@@ -184,11 +184,14 @@ class HtmlGenerator {
                 const content = await fs.readFile(templatePath, 'utf8');
                 const name = file.replace('.hbs', '').replace(/\//g, '-');
 
-                if (file.startsWith('partials/')) {
+                // Register partials and layouts (for partial blocks)
+                if (file.startsWith('partials/') || file.startsWith('layouts/')) {
                     Handlebars.registerPartial(name, content);
                 }
 
                 this.templates[name] = Handlebars.compile(content);
+            } else {
+                console.warn(`Template not found: ${templatePath}`);
             }
         }
 
