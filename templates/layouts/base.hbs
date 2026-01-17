@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{#if metaDescription}}{{metaDescription}}{{else}}{{siteDescription}}{{/if}}">
+    <meta name="theme-color" content="{{primaryColor}}">
+
+    <title>{{pageTitle}} | {{siteName}}</title>
+
+    <!-- Preconnect to important origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Critical CSS inlined for fast first paint -->
+    <style>
+        :root {
+            --primary: {{primaryColor}};
+            --primary-dark: color-mix(in srgb, {{primaryColor}} 80%, black);
+            --primary-light: color-mix(in srgb, {{primaryColor}} 20%, white);
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-alt: #f9fafb;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main { flex: 1; }
+
+        img, video { max-width: 100%; height: auto; display: block; }
+
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        button, .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: var(--bg-alt);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--border);
+            text-decoration: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-alt) 25%, var(--border) 50%, var(--bg-alt) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+
+    <!-- Deferred CSS -->
+    <link rel="stylesheet" href="assets/css/main.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="assets/css/main.css"></noscript>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/images/icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+
+    {{#if canonicalUrl}}<link rel="canonical" href="{{canonicalUrl}}">{{/if}}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{pageTitle}} | {{siteName}}">
+    <meta property="og:description" content="{{#if metaDescription}}{{metaDescription}}{{else}}{{siteDescription}}{{/if}}">
+    <meta property="og:type" content="website">
+    {{#if ogImage}}<meta property="og:image" content="{{ogImage}}">{{/if}}
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{siteName}}",
+        "description": "{{siteDescription}}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "search.html?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main" class="visually-hidden">Skip to main content</a>
+
+    {{> partials-header}}
+
+    <main id="main">
+        {{{body}}}
+    </main>
+
+    {{> partials-footer}}
+
+    {{> partials-cart-sidebar}}
+    {{> partials-search-modal}}
+
+    <!-- Store data for JavaScript -->
+    <script>
+        window.STORE_CONFIG = {
+            siteName: "{{siteName}}",
+            currency: "{{currency}}",
+            currencySymbol: "{{currencySymbol}}",
+            enableSearch: {{enableSearch}},
+            enableCart: {{enableCart}},
+            enableWishlist: {{enableWishlist}}
+        };
+    </script>
+
+    <!-- Deferred JavaScript -->
+    <script src="assets/js/store.js" defer></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>

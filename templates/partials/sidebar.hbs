@@ -1,0 +1,89 @@
+<aside class="shop-sidebar" data-sidebar>
+    <!-- Categories Filter -->
+    <div class="filter-section">
+        <h3 class="filter-title">
+            Categories
+            <button class="filter-toggle" aria-expanded="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+        </h3>
+        <ul class="category-list filter-content">
+            <li><a href="products.html" class="category-link {{#unless category.id}}active{{/unless}}">All Products</a></li>
+            {{#each allCategories}}
+            {{#unless parent}}
+            <li>
+                <a href="category/{{slug this.name}}-{{this.id}}.html"
+                   class="category-link {{#if (eq ../category.id this.id)}}active{{/if}}">
+                    {{this.name}}
+                    <span class="count">{{this.count}}</span>
+                </a>
+            </li>
+            {{/unless}}
+            {{/each}}
+        </ul>
+    </div>
+
+    <!-- Price Filter -->
+    <div class="filter-section">
+        <h3 class="filter-title">
+            Price
+            <button class="filter-toggle" aria-expanded="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+        </h3>
+        <div class="price-filter filter-content">
+            <div class="price-inputs">
+                <div class="price-input">
+                    <label for="min-price">Min</label>
+                    <input type="number" id="min-price" name="min-price" placeholder="0" min="0" data-filter-min-price>
+                </div>
+                <span class="price-separator">-</span>
+                <div class="price-input">
+                    <label for="max-price">Max</label>
+                    <input type="number" id="max-price" name="max-price" placeholder="1000" min="0" data-filter-max-price>
+                </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" data-action="apply-price-filter">Apply</button>
+        </div>
+    </div>
+
+    <!-- Stock Filter -->
+    <div class="filter-section">
+        <h3 class="filter-title">
+            Availability
+            <button class="filter-toggle" aria-expanded="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+        </h3>
+        <div class="availability-filter filter-content">
+            <label class="checkbox-label">
+                <input type="checkbox" data-filter-in-stock checked>
+                <span>In Stock</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" data-filter-on-sale>
+                <span>On Sale</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Sort Options (Mobile) -->
+    <div class="filter-section mobile-sort">
+        <h3 class="filter-title">Sort By</h3>
+        <select class="sort-select" data-sort-select>
+            <option value="default">Default</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="name-az">Name: A to Z</option>
+            <option value="name-za">Name: Z to A</option>
+            <option value="newest">Newest First</option>
+            <option value="rating">Highest Rated</option>
+        </select>
+    </div>
+</aside>

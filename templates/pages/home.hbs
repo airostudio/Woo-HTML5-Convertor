@@ -1,0 +1,143 @@
+{{#> layouts-base}}
+{{#*inline "body"}}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">{{heroTitle}}</h1>
+            <p class="hero-subtitle">{{heroSubtitle}}</p>
+            <div class="hero-actions">
+                <a href="products.html" class="btn btn-primary btn-lg">Shop Now</a>
+                <a href="#featured" class="btn btn-secondary btn-lg">Featured Products</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+{{#if topCategories.length}}
+<section class="categories-section">
+    <div class="container">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories-grid">
+            {{#each topCategories}}
+            <a href="category/{{slug this.name}}-{{this.id}}.html" class="category-card">
+                {{#if this.image}}
+                <img src="{{this.image.src}}" alt="{{this.name}}" loading="lazy" class="category-image">
+                {{else}}
+                <div class="category-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    </svg>
+                </div>
+                {{/if}}
+                <div class="category-info">
+                    <h3>{{this.name}}</h3>
+                    <span class="product-count">{{this.count}} products</span>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+</section>
+{{/if}}
+
+<!-- Featured Products -->
+{{#if featuredProducts.length}}
+<section class="featured-section" id="featured">
+    <div class="container">
+        {{> partials-product-grid title="Featured Products" products=featuredProducts viewAllLink="products.html"}}
+    </div>
+</section>
+{{/if}}
+
+<!-- On Sale Products -->
+{{#if onSaleProducts.length}}
+<section class="sale-section">
+    <div class="container">
+        <div class="sale-banner">
+            <div class="sale-content">
+                <span class="sale-tag">Special Offers</span>
+                <h2>Products on Sale</h2>
+                <p>Don't miss out on these amazing deals!</p>
+            </div>
+        </div>
+        {{> partials-product-grid products=onSaleProducts viewAllLink="products.html?filter=sale"}}
+    </div>
+</section>
+{{/if}}
+
+<!-- New Arrivals -->
+{{#if newProducts.length}}
+<section class="new-arrivals-section">
+    <div class="container">
+        {{> partials-product-grid title="New Arrivals" products=newProducts viewAllLink="products.html?sort=newest"}}
+    </div>
+</section>
+{{/if}}
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="3" width="15" height="13"/>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                        <circle cx="5.5" cy="18.5" r="2.5"/>
+                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                </div>
+                <h3>Free Shipping</h3>
+                <p>On orders over $50</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <h3>Secure Payment</h3>
+                <p>100% secure checkout</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                </div>
+                <h3>Easy Returns</h3>
+                <p>30 days return policy</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Dedicated support team</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-content">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to our newsletter for exclusive offers and updates</p>
+            <form class="newsletter-form" data-newsletter-form>
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{{/inline}}
+{{/layouts-base}}

@@ -1,0 +1,333 @@
+{{#> layouts-base}}
+{{#*inline "body"}}
+
+<div class="container">
+    {{> partials-breadcrumb}}
+
+    <!-- Product Detail -->
+    <article class="product-detail" itemscope itemtype="https://schema.org/Product">
+        <div class="product-detail-grid">
+            <!-- Product Gallery -->
+            <div class="product-gallery">
+                <div class="gallery-main">
+                    {{#if gallery.length}}
+                    <img
+                        id="main-image"
+                        src="{{gallery.[0].src}}"
+                        alt="{{product.name}}"
+                        itemprop="image"
+                        class="main-product-image"
+                    >
+                    {{else}}
+                    <div class="image-placeholder">
+                        <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                    </div>
+                    {{/if}}
+
+                    {{#if product.on_sale}}
+                    <span class="product-badge sale large">Sale</span>
+                    {{/if}}
+                </div>
+
+                {{#if (add gallery.length -1)}}
+                <div class="gallery-thumbs">
+                    {{#each gallery}}
+                    <button
+                        class="gallery-thumb {{#if (eq @index 0)}}active{{/if}}"
+                        data-action="change-image"
+                        data-image="{{this.src}}"
+                    >
+                        <img src="{{imageUrl this 'thumbnail'}}" alt="{{../product.name}} - Image {{add @index 1}}">
+                    </button>
+                    {{/each}}
+                </div>
+                {{/if}}
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info-detail">
+                {{#if product.categories.length}}
+                <div class="product-meta">
+                    <a href="category/{{slug product.categories.[0].name}}-{{product.categories.[0].id}}.html" class="product-category-link">
+                        {{product.categories.[0].name}}
+                    </a>
+                </div>
+                {{/if}}
+
+                <h1 class="product-title-large" itemprop="name">{{product.name}}</h1>
+
+                {{#if product.average_rating}}
+                <div class="product-rating-detail" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                    {{{starRating product.average_rating}}}
+                    <span class="rating-text">
+                        <span itemprop="ratingValue">{{product.average_rating}}</span> out of 5
+                        (<span itemprop="reviewCount">{{product.rating_count}}</span> reviews)
+                    </span>
+                </div>
+                {{/if}}
+
+                <div class="product-price-detail" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                    <meta itemprop="priceCurrency" content="{{currency}}">
+                    {{#if product.on_sale}}
+                    <span class="price-regular strikethrough">{{formatPrice product.regular_price}}</span>
+                    <span class="price-sale large" itemprop="price" content="{{product.sale_price}}">{{formatPrice product.sale_price}}</span>
+                    <span class="save-badge">Save {{formatPrice (subtract product.regular_price product.sale_price)}}</span>
+                    {{else}}
+                    <span class="price-regular large" itemprop="price" content="{{product.price}}">{{formatPrice product.price}}</span>
+                    {{/if}}
+
+                    <link itemprop="availability" href="https://schema.org/{{#if (inStock product.stock_status)}}InStock{{else}}OutOfStock{{/if}}">
+                </div>
+
+                {{#if product.short_description}}
+                <div class="product-short-description" itemprop="description">
+                    {{{safeHtml product.short_description}}}
+                </div>
+                {{/if}}
+
+                <!-- Variations -->
+                {{#if hasVariations}}
+                <div class="product-variations" data-variations='{{json variations}}'>
+                    {{#each product.attributes}}
+                    {{#if this.variation}}
+                    <div class="variation-group">
+                        <label class="variation-label">{{this.name}}</label>
+                        <div class="variation-options">
+                            {{#each this.options}}
+                            <button
+                                class="variation-option {{#if (eq @index 0)}}selected{{/if}}"
+                                data-attribute="{{../this.name}}"
+                                data-value="{{this}}"
+                            >
+                                {{this}}
+                            </button>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                <!-- Add to Cart -->
+                <div class="product-actions-detail">
+                    <div class="quantity-selector">
+                        <label for="quantity" class="visually-hidden">Quantity</label>
+                        <button class="qty-btn" data-action="decrease-qty" aria-label="Decrease quantity">-</button>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{#if product.stock_quantity}}{{product.stock_quantity}}{{else}}99{{/if}}" data-quantity>
+                        <button class="qty-btn" data-action="increase-qty" aria-label="Increase quantity">+</button>
+                    </div>
+
+                    {{#if (inStock product.stock_status)}}
+                    <button
+                        class="btn btn-primary btn-lg add-to-cart-btn"
+                        data-action="add-to-cart"
+                        data-product-id="{{product.id}}"
+                        data-product-name="{{product.name}}"
+                        data-product-price="{{product.price}}"
+                        data-product-image="{{#if gallery.[0]}}{{gallery.[0].src}}{{/if}}"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        Add to Cart
+                    </button>
+                    {{else}}
+                    <button class="btn btn-secondary btn-lg" disabled>Out of Stock</button>
+                    {{/if}}
+
+                    {{#if ../enableWishlist}}
+                    <button
+                        class="btn btn-icon btn-lg wishlist-btn"
+                        data-action="toggle-wishlist"
+                        data-product-id="{{product.id}}"
+                        aria-label="Add to wishlist"
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </button>
+                    {{/if}}
+                </div>
+
+                <!-- Stock Status -->
+                <div class="stock-status">
+                    {{#if (inStock product.stock_status)}}
+                    <span class="in-stock">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        In Stock
+                        {{#if product.stock_quantity}}({{product.stock_quantity}} available){{/if}}
+                    </span>
+                    {{else}}
+                    <span class="out-of-stock">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                        Out of Stock
+                    </span>
+                    {{/if}}
+                </div>
+
+                <!-- Product Meta -->
+                <div class="product-meta-detail">
+                    {{#if product.sku}}
+                    <div class="meta-item">
+                        <span class="meta-label">SKU:</span>
+                        <span class="meta-value" itemprop="sku">{{product.sku}}</span>
+                    </div>
+                    {{/if}}
+
+                    {{#if product.categories.length}}
+                    <div class="meta-item">
+                        <span class="meta-label">Categories:</span>
+                        <span class="meta-value">
+                            {{#each product.categories}}
+                            <a href="category/{{slug this.name}}-{{this.id}}.html">{{this.name}}</a>{{#unless @last}}, {{/unless}}
+                            {{/each}}
+                        </span>
+                    </div>
+                    {{/if}}
+
+                    {{#if product.tags.length}}
+                    <div class="meta-item">
+                        <span class="meta-label">Tags:</span>
+                        <span class="meta-value">
+                            {{#each product.tags}}
+                            <a href="search.html?tag={{this.slug}}">{{this.name}}</a>{{#unless @last}}, {{/unless}}
+                            {{/each}}
+                        </span>
+                    </div>
+                    {{/if}}
+                </div>
+
+                <!-- Share -->
+                <div class="product-share">
+                    <span class="share-label">Share:</span>
+                    <a href="https://www.facebook.com/sharer.php?u=" class="share-link" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text=" class="share-link" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                        </svg>
+                    </a>
+                    <button class="share-link copy-link" data-action="copy-link" aria-label="Copy link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Tabs -->
+        <div class="product-tabs">
+            <div class="tabs-nav" role="tablist">
+                <button class="tab-btn active" role="tab" aria-selected="true" data-tab="description">Description</button>
+                {{#if product.attributes.length}}
+                <button class="tab-btn" role="tab" aria-selected="false" data-tab="specifications">Specifications</button>
+                {{/if}}
+                {{#if enableReviews}}
+                <button class="tab-btn" role="tab" aria-selected="false" data-tab="reviews">Reviews ({{product.rating_count}})</button>
+                {{/if}}
+            </div>
+
+            <div class="tabs-content">
+                <div class="tab-panel active" id="description" role="tabpanel">
+                    {{{safeHtml product.description}}}
+                </div>
+
+                {{#if product.attributes.length}}
+                <div class="tab-panel" id="specifications" role="tabpanel">
+                    <table class="specs-table">
+                        <tbody>
+                            {{#each product.attributes}}
+                            <tr>
+                                <th>{{this.name}}</th>
+                                <td>{{#each this.options}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</td>
+                            </tr>
+                            {{/each}}
+                            {{#if product.weight}}
+                            <tr>
+                                <th>Weight</th>
+                                <td>{{product.weight}} kg</td>
+                            </tr>
+                            {{/if}}
+                            {{#if product.dimensions.length}}
+                            <tr>
+                                <th>Dimensions</th>
+                                <td>{{product.dimensions.length}} x {{product.dimensions.width}} x {{product.dimensions.height}} cm</td>
+                            </tr>
+                            {{/if}}
+                        </tbody>
+                    </table>
+                </div>
+                {{/if}}
+
+                {{#if enableReviews}}
+                <div class="tab-panel" id="reviews" role="tabpanel">
+                    <div class="reviews-summary">
+                        <div class="rating-overview">
+                            <span class="big-rating">{{product.average_rating}}</span>
+                            <div>
+                                {{{starRating product.average_rating}}}
+                                <span>Based on {{product.rating_count}} reviews</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reviews-list" data-reviews>
+                        <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </article>
+
+    <!-- Related Products -->
+    {{#if relatedProducts.length}}
+    <section class="related-products">
+        {{> partials-product-grid title="Related Products" products=relatedProducts}}
+    </section>
+    {{/if}}
+</div>
+
+<!-- JSON-LD Product Schema -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{product.name}}",
+    "description": "{{truncate product.description 500}}",
+    {{#if gallery.[0]}}"image": "{{gallery.[0].src}}",{{/if}}
+    {{#if product.sku}}"sku": "{{product.sku}}",{{/if}}
+    "offers": {
+        "@type": "Offer",
+        "price": "{{product.price}}",
+        "priceCurrency": "{{currency}}",
+        "availability": "https://schema.org/{{#if (inStock product.stock_status)}}InStock{{else}}OutOfStock{{/if}}"
+    }
+    {{#if product.average_rating}},
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{product.average_rating}}",
+        "reviewCount": "{{product.rating_count}}"
+    }
+    {{/if}}
+}
+</script>
+
+{{/inline}}
+{{/layouts-base}}

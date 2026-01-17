@@ -1,0 +1,36 @@
+{{#> layouts-base}}
+{{#*inline "body"}}
+
+<div class="container">
+    <div class="error-page">
+        <div class="error-content">
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-message">
+                Sorry, we couldn't find the page you're looking for.
+                It might have been moved or deleted.
+            </p>
+            <div class="error-actions">
+                <a href="index.html" class="btn btn-primary btn-lg">Go to Homepage</a>
+                <a href="products.html" class="btn btn-secondary btn-lg">Browse Products</a>
+            </div>
+        </div>
+
+        <div class="error-suggestions">
+            <h3>You might be interested in:</h3>
+            <div class="quick-links">
+                <a href="products.html">All Products</a>
+                {{#each categories}}
+                {{#unless parent}}
+                {{#if (eq @index 0)}}<a href="category/{{slug this.name}}-{{this.id}}.html">{{this.name}}</a>{{/if}}
+                {{#if (eq @index 1)}}<a href="category/{{slug this.name}}-{{this.id}}.html">{{this.name}}</a>{{/if}}
+                {{#if (eq @index 2)}}<a href="category/{{slug this.name}}-{{this.id}}.html">{{this.name}}</a>{{/if}}
+                {{/unless}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{/inline}}
+{{/layouts-base}}

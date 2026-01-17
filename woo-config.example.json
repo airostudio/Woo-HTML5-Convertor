@@ -1,0 +1,18 @@
+{
+  "siteName": "My Store",
+  "siteDescription": "Your Online Store - Fast, Modern, Beautiful",
+  "siteUrl": "https://your-woocommerce-store.com",
+  "outputDir": "./output",
+  "primaryColor": "#2563eb",
+  "currency": "USD",
+  "currencySymbol": "$",
+  "productsPerPage": 12,
+  "enableSearch": true,
+  "enableCart": true,
+  "enableWishlist": false,
+  "enableReviews": true,
+  "enablePWA": true,
+  "optimizeImages": true,
+  "generateWebp": true,
+  "theme": "default"
+}

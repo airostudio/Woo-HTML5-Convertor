@@ -1,0 +1,99 @@
+{{#> layouts-base}}
+{{#*inline "body"}}
+
+<div class="container">
+    {{> partials-breadcrumb}}
+
+    <div class="search-page">
+        <header class="search-header">
+            <h1 class="page-title">Search Results</h1>
+            <form class="search-form-large" action="search.html" method="GET">
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <input
+                        type="search"
+                        name="q"
+                        placeholder="Search for products..."
+                        class="search-input-large"
+                        data-search-page-input
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </header>
+
+        <!-- Search Results Info -->
+        <div class="search-info" data-search-info style="display: none;">
+            <p>
+                <span data-results-count>0</span> results found for
+                "<strong data-search-query></strong>"
+            </p>
+        </div>
+
+        <!-- No Results State -->
+        <div class="search-no-results" data-no-results style="display: none;">
+            <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.3-4.3"/>
+                <path d="M8 8l6 6M14 8l-6 6"/>
+            </svg>
+            <h2>No products found</h2>
+            <p>We couldn't find any products matching your search.</p>
+            <div class="search-suggestions-alt">
+                <h3>Suggestions:</h3>
+                <ul>
+                    <li>Check your spelling</li>
+                    <li>Try more general keywords</li>
+                    <li>Try different keywords</li>
+                </ul>
+            </div>
+            <a href="products.html" class="btn btn-primary">Browse All Products</a>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div class="search-results-content" data-search-results-content>
+            <!-- Toolbar -->
+            <div class="shop-toolbar" data-search-toolbar style="display: none;">
+                <div class="toolbar-left">
+                    <span class="results-count" data-results-summary></span>
+                </div>
+                <div class="toolbar-right">
+                    <select class="sort-select" data-sort-select aria-label="Sort results">
+                        <option value="relevance">Relevance</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name-az">Name: A to Z</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Results Grid -->
+            <div class="product-grid" data-search-results-grid>
+                <!-- Results rendered by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Popular Categories -->
+        <section class="popular-categories" data-popular-categories>
+            <h2>Popular Categories</h2>
+            <div class="categories-list">
+                {{#each categories}}
+                {{#unless parent}}
+                <a href="category/{{slug this.name}}-{{this.id}}.html" class="category-pill">
+                    {{this.name}}
+                    <span class="count">({{this.count}})</span>
+                </a>
+                {{/unless}}
+                {{/each}}
+            </div>
+        </section>
+    </div>
+</div>
+
+{{/inline}}
+{{/layouts-base}}

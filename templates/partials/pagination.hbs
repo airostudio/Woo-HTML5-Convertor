@@ -1,0 +1,31 @@
+{{#if (add hasPrevPage hasNextPage)}}
+<nav class="pagination" aria-label="Pagination">
+    <ul class="pagination-list">
+        {{#if hasPrevPage}}
+        <li>
+            <a href="{{prevPageUrl}}" class="pagination-link prev" aria-label="Previous page">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+                Previous
+            </a>
+        </li>
+        {{/if}}
+
+        <li class="pagination-info">
+            Page <strong>{{currentPage}}</strong> of <strong>{{totalPages}}</strong>
+        </li>
+
+        {{#if hasNextPage}}
+        <li>
+            <a href="{{nextPageUrl}}" class="pagination-link next" aria-label="Next page">
+                Next
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </a>
+        </li>
+        {{/if}}
+    </ul>
+</nav>
+{{/if}}

@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Output directories
+output/
+demo-store/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary files
+temp/
+tmp/
+.cache/
+
+# Build artifacts
+*.tgz
+
+# Test coverage
+coverage/
+
+# Config files with secrets
+woo-config.json

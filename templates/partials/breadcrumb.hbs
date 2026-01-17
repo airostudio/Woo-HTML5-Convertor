@@ -1,0 +1,16 @@
+<nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        {{#each breadcrumbs}}
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            {{#if url}}
+            <a href="{{url}}" itemprop="item">
+                <span itemprop="name">{{name}}</span>
+            </a>
+            {{else}}
+            <span itemprop="name" aria-current="page">{{name}}</span>
+            {{/if}}
+            <meta itemprop="position" content="{{add @index 1}}">
+        </li>
+        {{/each}}
+    </ol>
+</nav>

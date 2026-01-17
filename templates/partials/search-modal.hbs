@@ -1,0 +1,53 @@
+<!-- Search Modal -->
+<div class="search-modal" data-search-modal aria-hidden="true">
+    <div class="search-modal-overlay" data-action="close-search"></div>
+    <div class="search-modal-content" role="dialog" aria-label="Search">
+        <div class="search-modal-header">
+            <form class="search-form" action="search.html" method="GET" role="search">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.3-4.3"/>
+                </svg>
+                <input
+                    type="search"
+                    name="q"
+                    placeholder="Search products..."
+                    class="search-input"
+                    data-search-input
+                    autocomplete="off"
+                    autofocus
+                >
+                <button type="button" class="close-btn" data-action="close-search" aria-label="Close search">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <div class="search-results" data-search-results>
+            <div class="search-loading" data-search-loading style="display: none;">
+                <div class="spinner"></div>
+                <span>Searching...</span>
+            </div>
+
+            <div class="search-suggestions" data-search-suggestions>
+                <h3>Popular Searches</h3>
+                <div class="suggestion-tags">
+                    {{#each categories}}
+                    {{#unless parent}}
+                    {{#if (eq @index 0)}}<a href="category/{{slug this.name}}-{{this.id}}.html" class="suggestion-tag">{{this.name}}</a>{{/if}}
+                    {{#if (eq @index 1)}}<a href="category/{{slug this.name}}-{{this.id}}.html" class="suggestion-tag">{{this.name}}</a>{{/if}}
+                    {{#if (eq @index 2)}}<a href="category/{{slug this.name}}-{{this.id}}.html" class="suggestion-tag">{{this.name}}</a>{{/if}}
+                    {{/unless}}
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="search-results-list" data-search-results-list>
+                <!-- Results rendered by JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
