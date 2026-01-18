@@ -19,7 +19,9 @@
     "pm2:logs": "pm2 logs store-converter-api",
     "docker:build": "docker build -t store-converter .",
     "docker:run": "docker run -d -p 3002:3002 --name store-converter store-converter",
-    "docker:compose": "docker-compose up -d"
+    "docker:compose": "docker-compose up -d",
+    "vercel:build": "echo 'Build complete'",
+    "vercel:dev": "vercel dev"
   },
   "keywords": [
     "woocommerce",
@@ -32,6 +34,8 @@
   "author": "Woo-HTML5-Convertor",
   "license": "MIT",
   "dependencies": {
+    "@vercel/blob": "^0.19.0",
+    "@vercel/kv": "^1.0.0",
     "@woocommerce/woocommerce-rest-api": "^1.0.1",
     "archiver": "^6.0.1",
     "axios": "^1.6.2",
