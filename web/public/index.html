@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Converter - Multi-Platform E-commerce to HTML5</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .platforms-badge {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .platform-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #converter-widget {
+            margin-bottom: 40px;
+        }
+        .integration-docs {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 40px;
+        }
+        .integration-docs h2 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+        .integration-docs p {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+        .code-block {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+        }
+        .code-block code {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .code-block .comment {
+            color: #64748b;
+        }
+        .code-block .string {
+            color: #a5d6ff;
+        }
+        .code-block .keyword {
+            color: #ff7b72;
+        }
+        .code-block .function {
+            color: #d2a8ff;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .tab {
+            padding: 8px 16px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .tab.active {
+            background: #2563eb;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .feature {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .feature h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+        .feature p {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Store Converter</h1>
+            <p>Convert your e-commerce store to a blazing-fast HTML5 static site. Support for multiple platforms with a simple embeddable widget.</p>
+            <div class="platforms-badge">
+                <span class="platform-badge">WooCommerce</span>
+                <span class="platform-badge">Shopify</span>
+                <span class="platform-badge">Wix</span>
+                <span class="platform-badge">Squarespace</span>
+            </div>
+        </div>
+
+        <!-- The Converter Widget -->
+        <div id="converter-widget"></div>
+
+        <!-- Integration Documentation -->
+        <div class="integration-docs">
+            <h2>Integration Guide</h2>
+            <p>Easily embed the store converter into your AI website creator or any web application.</p>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="embed">Embed Widget</button>
+                <button class="tab" data-tab="sdk">JavaScript SDK</button>
+                <button class="tab" data-tab="api">REST API</button>
+            </div>
+
+            <div class="tab-content active" data-tab="embed">
+                <h3 style="margin-bottom: 12px;">Quick Embed</h3>
+                <p style="margin-bottom: 16px;">Add the converter to any page with just a few lines of code:</p>
+                <div class="code-block">
+<code><span class="comment">&lt;!-- 1. Add a container element --&gt;</span>
+&lt;<span class="keyword">div</span> <span class="function">id</span>=<span class="string">"store-converter"</span>&gt;&lt;/<span class="keyword">div</span>&gt;
+
+<span class="comment">&lt;!-- 2. Include the embed script --&gt;</span>
+&lt;<span class="keyword">script</span> <span class="function">src</span>=<span class="string">"http://localhost:3002/embed.js"</span>&gt;&lt;/<span class="keyword">script</span>&gt;
+
+<span class="comment">&lt;!-- 3. Initialize the widget --&gt;</span>
+&lt;<span class="keyword">script</span>&gt;
+  <span class="function">StoreConverter</span>.<span class="function">init</span>(<span class="string">'#store-converter'</span>, {
+    <span class="function">apiEndpoint</span>: <span class="string">'http://localhost:3002/api'</span>,
+    <span class="function">theme</span>: <span class="string">'light'</span>,
+    <span class="function">primaryColor</span>: <span class="string">'#2563eb'</span>,
+    <span class="function">showPlatforms</span>: [<span class="string">'woocommerce'</span>, <span class="string">'shopify'</span>, <span class="string">'wix'</span>, <span class="string">'squarespace'</span>],
+    <span class="function">onComplete</span>: (<span class="keyword">result</span>) =&gt; {
+      console.<span class="function">log</span>(<span class="string">'Conversion complete!'</span>, result);
+    }
+  });
+&lt;/<span class="keyword">script</span>&gt;</code>
+                </div>
+            </div>
+
+            <div class="tab-content" data-tab="sdk">
+                <h3 style="margin-bottom: 12px;">JavaScript SDK</h3>
+                <p style="margin-bottom: 16px;">Use the SDK for programmatic control:</p>
+                <div class="code-block">
+<code><span class="comment">// Import or use global StoreConverter</span>
+<span class="keyword">const</span> converter = <span class="function">StoreConverter</span>.<span class="function">init</span>(<span class="string">'#widget'</span>, {
+  <span class="function">apiEndpoint</span>: <span class="string">'https://your-api.com/api'</span>,
+  <span class="function">onStart</span>: (<span class="keyword">config</span>) =&gt; {
+    console.<span class="function">log</span>(<span class="string">'Starting conversion...'</span>, config);
+  },
+  <span class="function">onProgress</span>: (<span class="keyword">data</span>) =&gt; {
+    console.<span class="function">log</span>(<span class="string">`Progress: ${data.progress}%`</span>);
+  },
+  <span class="function">onComplete</span>: (<span class="keyword">result</span>) =&gt; {
+    <span class="comment">// Handle completion</span>
+    <span class="keyword">const</span> downloadUrl = <span class="string">`/api/download/${result.conversionId}`</span>;
+    window.<span class="function">location</span>.href = downloadUrl;
+  },
+  <span class="function">onError</span>: (<span class="keyword">error</span>) =&gt; {
+    console.<span class="function">error</span>(<span class="string">'Conversion failed:'</span>, error);
+  }
+});
+
+<span class="comment">// Or convert programmatically without UI</span>
+<span class="keyword">const</span> result = <span class="keyword">await</span> <span class="function">StoreConverter</span>.<span class="function">convert</span>(
+  <span class="string">'https://your-api.com/api'</span>,
+  {
+    <span class="function">platform</span>: <span class="string">'shopify'</span>,
+    <span class="function">shopDomain</span>: <span class="string">'store.myshopify.com'</span>,
+    <span class="function">accessToken</span>: <span class="string">'shpat_xxx'</span>,
+    <span class="function">siteName</span>: <span class="string">'My Store'</span>
+  }
+);</code>
+                </div>
+            </div>
+
+            <div class="tab-content" data-tab="api">
+                <h3 style="margin-bottom: 12px;">REST API</h3>
+                <p style="margin-bottom: 16px;">Direct API access for backend integration:</p>
+                <div class="code-block">
+<code><span class="comment"># Get supported platforms</span>
+GET /api/platforms
+
+<span class="comment"># Test connection</span>
+POST /api/test-connection
+{
+  <span class="string">"platform"</span>: <span class="string">"woocommerce"</span>,
+  <span class="string">"siteUrl"</span>: <span class="string">"https://store.com"</span>,
+  <span class="string">"consumerKey"</span>: <span class="string">"ck_xxx"</span>,
+  <span class="string">"consumerSecret"</span>: <span class="string">"cs_xxx"</span>
+}
+
+<span class="comment"># Start conversion</span>
+POST /api/convert
+{
+  <span class="string">"platform"</span>: <span class="string">"shopify"</span>,
+  <span class="string">"shopDomain"</span>: <span class="string">"store.myshopify.com"</span>,
+  <span class="string">"accessToken"</span>: <span class="string">"shpat_xxx"</span>,
+  <span class="string">"siteName"</span>: <span class="string">"My Store"</span>,
+  <span class="string">"primaryColor"</span>: <span class="string">"#2563eb"</span>
+}
+
+<span class="comment"># Response: { "conversionId": "uuid" }</span>
+
+<span class="comment"># Stream progress (SSE)</span>
+GET /api/progress/:conversionId
+
+<span class="comment"># Download result</span>
+GET /api/download/:conversionId
+
+<span class="comment"># Preview result</span>
+GET /api/preview/:conversionId</code>
+                </div>
+            </div>
+
+            <h3 style="margin: 24px 0 16px;">Features</h3>
+            <div class="features-grid">
+                <div class="feature">
+                    <h4>Multi-Platform</h4>
+                    <p>Support for WooCommerce, Shopify, Wix, Squarespace, and more coming soon.</p>
+                </div>
+                <div class="feature">
+                    <h4>Embeddable Widget</h4>
+                    <p>Drop-in component with customizable theme and callbacks.</p>
+                </div>
+                <div class="feature">
+                    <h4>Real-time Progress</h4>
+                    <p>Server-Sent Events for live conversion progress updates.</p>
+                </div>
+                <div class="feature">
+                    <h4>Extensible</h4>
+                    <p>Add custom platform connectors with the plugin architecture.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initialize the widget -->
+    <script src="/embed.js"></script>
+    <script>
+        // Initialize the converter widget
+        StoreConverter.init('#converter-widget', {
+            apiEndpoint: '/api',
+            theme: 'light',
+            primaryColor: '#667eea',
+            enableDemo: true,
+            onComplete: (result) => {
+                console.log('Conversion complete!', result);
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.querySelector(`.tab-content[data-tab="${tabId}"]`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
