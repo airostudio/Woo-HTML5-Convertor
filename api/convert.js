@@ -39,11 +39,9 @@ async function storeBlob(path, buffer) {
         });
         return blob.url;
     } catch (e) {
-        // Fallback: return base64 data URL for local testing
+        // Fallback: return base64 data URL for immediate download
         const base64 = buffer.toString('base64');
-        const id = path.split('/').pop().replace('.zip', '');
-        memoryStorage.blobs.set(id, buffer);
-        return `/api/download/${id}`;
+        return `data:application/zip;base64,${base64}`;
     }
 }
 

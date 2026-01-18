@@ -473,7 +473,18 @@ module.exports = async function handler(req, res) {
                 'Successfully converted ' + data.productCount + ' products';
 
             document.getElementById('sc-download-btn').addEventListener('click', () => {
-                window.open(data.downloadUrl, '_blank');
+                // Handle both regular URLs and base64 data URLs
+                if (data.downloadUrl.startsWith('data:')) {
+                    // Create a temporary link for base64 data URL download
+                    const link = document.createElement('a');
+                    link.href = data.downloadUrl;
+                    link.download = 'store-conversion.zip';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    window.open(data.downloadUrl, '_blank');
+                }
             });
 
             if (this.options.onComplete) this.options.onComplete(data);
