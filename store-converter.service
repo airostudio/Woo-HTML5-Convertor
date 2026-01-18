@@ -1,0 +1,20 @@
+[Unit]
+Description=Store Converter API Server
+Documentation=https://github.com/your-repo/store-converter
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/store-converter
+ExecStart=/usr/bin/node web/api-server.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=store-converter
+Environment=NODE_ENV=production
+Environment=PORT=3002
+
+[Install]
+WantedBy=multi-user.target

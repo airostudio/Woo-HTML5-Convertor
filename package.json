@@ -7,13 +7,19 @@
     "woo-convert": "./bin/cli.js"
   },
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node web/api-server.js",
     "convert": "node bin/cli.js",
     "wizard": "node wizard/server.js",
     "api": "node web/api-server.js",
     "serve": "npx serve output",
     "build": "node src/builder.js",
-    "test": "node tests/test.js"
+    "test": "node tests/test.js",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop store-converter-api",
+    "pm2:logs": "pm2 logs store-converter-api",
+    "docker:build": "docker build -t store-converter .",
+    "docker:run": "docker run -d -p 3002:3002 --name store-converter store-converter",
+    "docker:compose": "docker-compose up -d"
   },
   "keywords": [
     "woocommerce",
