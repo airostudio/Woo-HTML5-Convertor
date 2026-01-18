@@ -44,10 +44,11 @@ async function storeBlob(path, buffer) {
 }
 
 module.exports = async function handler(req, res) {
-    // Set CORS headers
+    // Set CORS and JSON headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Content-Type', 'application/json');
 
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {

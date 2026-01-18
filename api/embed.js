@@ -425,6 +425,26 @@ module.exports = async function handler(req, res) {
                     })
                 });
 
+                // Check if response is OK and JSON
+                const contentType = response.headers.get('content-type') || '';
+                if (!response.ok) {
+                    let errorMsg = 'Server error: ' + response.status;
+                    if (contentType.includes('application/json')) {
+                        try {
+                            const errData = await response.json();
+                            errorMsg = errData.error || errorMsg;
+                        } catch (e) {}
+                    } else {
+                        const text = await response.text();
+                        if (text.length < 200) errorMsg = text;
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                if (!contentType.includes('application/json')) {
+                    throw new Error('Invalid response from server (expected JSON)');
+                }
+
                 const data = await response.json();
 
                 // Wait for progress animation to catch up
@@ -434,7 +454,7 @@ module.exports = async function handler(req, res) {
                     this.addLog('Conversion completed successfully!', 'info');
                     this.showResult(data);
                 } else {
-                    throw new Error(data.error);
+                    throw new Error(data.error || 'Unknown conversion error');
                 }
             } catch (error) {
                 this.addLog('Error: ' + error.message, 'error');
