@@ -1,28 +1,67 @@
 // Vercel Serverless Function: POST /api/convert
 const { createConnector } = require('../src/connectors');
-const { put } = require('@vercel/blob');
-const { kv } = require('@vercel/kv');
 const { v4: uuidv4 } = require('uuid');
 const archiver = require('archiver');
-const { Readable } = require('stream');
 
-// Import the converter (we'll create a lightweight version)
+// Import the converter
 const LightweightConverter = require('../src/vercel-converter');
 
+// In-memory storage fallback for local development
+const memoryStorage = {
+    conversions: new Map(),
+    blobs: new Map()
+};
+
+// Helper to get KV (with fallback)
+async function kvSet(key, value, options = {}) {
+    try {
+        // Try Vercel KV first
+        const { kv } = require('@vercel/kv');
+        await kv.set(key, value, options);
+    } catch (e) {
+        // Fallback to memory
+        memoryStorage.conversions.set(key, value);
+    }
+}
+
+// Helper to store blob (with fallback)
+async function storeBlob(path, buffer) {
+    try {
+        // Try Vercel Blob first
+        const { put } = require('@vercel/blob');
+        const blob = await put(path, buffer, {
+            access: 'public',
+            contentType: 'application/zip'
+        });
+        return blob.url;
+    } catch (e) {
+        // Fallback: return base64 data URL for local testing
+        const base64 = buffer.toString('base64');
+        const id = path.split('/').pop().replace('.zip', '');
+        memoryStorage.blobs.set(id, buffer);
+        return `/api/download/${id}`;
+    }
+}
+
 module.exports = async function handler(req, res) {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+        return res.status(405).json({ success: false, error: 'Method not allowed' });
     }
 
     const conversionId = uuidv4();
 
     try {
-        const { platform, credentials, options = {} } = req.body;
+        const { platform, credentials, options = {} } = req.body || {};
 
         if (!platform || !credentials) {
             return res.status(400).json({
@@ -31,8 +70,18 @@ module.exports = async function handler(req, res) {
             });
         }
 
-        // Initialize conversion state in KV
-        await kv.set(`conversion:${conversionId}`, {
+        // Validate credentials based on platform
+        if (platform === 'woocommerce') {
+            if (!credentials.siteUrl || !credentials.consumerKey || !credentials.consumerSecret) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'WooCommerce requires siteUrl, consumerKey, and consumerSecret'
+                });
+            }
+        }
+
+        // Initialize conversion state
+        await kvSet(`conversion:${conversionId}`, {
             id: conversionId,
             status: 'starting',
             progress: 0,
@@ -40,30 +89,52 @@ module.exports = async function handler(req, res) {
             startedAt: Date.now(),
             platform,
             options
-        }, { ex: 3600 }); // Expire after 1 hour
+        }, { ex: 3600 });
 
         // Create connector and fetch products
-        const connector = createConnector(platform, credentials);
+        let connector;
+        try {
+            connector = createConnector(platform, credentials);
+        } catch (e) {
+            return res.status(400).json({
+                success: false,
+                error: `Failed to create connector: ${e.message}`
+            });
+        }
 
         // Update status
-        await kv.set(`conversion:${conversionId}`, {
+        await kvSet(`conversion:${conversionId}`, {
             id: conversionId,
             status: 'fetching',
             progress: 10,
-            stage: 'Fetching products',
+            stage: 'Fetching products from store',
             startedAt: Date.now(),
             platform,
             options
         }, { ex: 3600 });
 
         // Fetch products from the platform
-        const products = await connector.exportProducts((progress) => {
-            // Progress callback - we can't update in real-time in serverless
-            // but the status endpoint will show the last known state
-        });
+        let products;
+        try {
+            products = await connector.exportProducts(() => {});
+        } catch (e) {
+            return res.status(400).json({
+                success: false,
+                conversionId,
+                error: `Failed to fetch products: ${e.message}. Please check your credentials and store URL.`
+            });
+        }
+
+        if (!products || products.length === 0) {
+            return res.status(400).json({
+                success: false,
+                conversionId,
+                error: 'No products found in your store. Please add some products first.'
+            });
+        }
 
         // Update status
-        await kv.set(`conversion:${conversionId}`, {
+        await kvSet(`conversion:${conversionId}`, {
             id: conversionId,
             status: 'converting',
             progress: 40,
@@ -76,12 +147,10 @@ module.exports = async function handler(req, res) {
 
         // Generate the static site
         const converter = new LightweightConverter(options);
-        const htmlFiles = await converter.convert(products, (progress, stage) => {
-            // Progress updates
-        });
+        const htmlFiles = await converter.convert(products, () => {});
 
         // Update status
-        await kv.set(`conversion:${conversionId}`, {
+        await kvSet(`conversion:${conversionId}`, {
             id: conversionId,
             status: 'packaging',
             progress: 80,
@@ -92,39 +161,39 @@ module.exports = async function handler(req, res) {
             options
         }, { ex: 3600 });
 
-        // Create ZIP archive and upload to Vercel Blob
+        // Create ZIP archive
         const zipBuffer = await createZipBuffer(htmlFiles);
 
-        const blob = await put(`conversions/${conversionId}.zip`, zipBuffer, {
-            access: 'public',
-            contentType: 'application/zip'
-        });
+        // Store the ZIP
+        const downloadUrl = await storeBlob(`conversions/${conversionId}.zip`, zipBuffer);
 
         // Update final status
-        await kv.set(`conversion:${conversionId}`, {
+        await kvSet(`conversion:${conversionId}`, {
             id: conversionId,
             status: 'completed',
             progress: 100,
             stage: 'Complete',
             productCount: products.length,
-            downloadUrl: blob.url,
+            downloadUrl,
             completedAt: Date.now(),
             startedAt: Date.now(),
             platform,
             options
-        }, { ex: 86400 }); // Keep for 24 hours
+        }, { ex: 86400 });
 
         return res.status(200).json({
             success: true,
             conversionId,
             status: 'completed',
-            downloadUrl: blob.url,
+            downloadUrl,
             productCount: products.length
         });
 
     } catch (error) {
+        console.error('Conversion error:', error);
+
         // Update error status
-        await kv.set(`conversion:${conversionId}`, {
+        await kvSet(`conversion:${conversionId}`, {
             id: conversionId,
             status: 'error',
             error: error.message,
@@ -134,7 +203,7 @@ module.exports = async function handler(req, res) {
         return res.status(500).json({
             success: false,
             conversionId,
-            error: error.message
+            error: error.message || 'An unexpected error occurred'
         });
     }
 };
@@ -156,3 +225,6 @@ async function createZipBuffer(files) {
         archive.finalize();
     });
 }
+
+// Export memory storage for download endpoint
+module.exports.memoryStorage = memoryStorage;

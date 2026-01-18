@@ -35,8 +35,27 @@ class LightweightConverter {
         });
     }
 
+    // Normalize product to handle both camelCase and snake_case
+    normalizeProduct(p) {
+        return {
+            id: p.id,
+            name: p.name,
+            slug: p.slug || this.slugify(p.name),
+            description: p.description || '',
+            shortDescription: p.shortDescription || p.short_description || '',
+            price: p.price || '0',
+            regularPrice: p.regularPrice || p.regular_price || p.price || '0',
+            salePrice: p.salePrice || p.sale_price || '',
+            images: p.images || [],
+            categories: p.categories || []
+        };
+    }
+
     async convert(products, progressCallback) {
         const files = {};
+
+        // Normalize all products first
+        const normalizedProducts = products.map(p => this.normalizeProduct(p));
 
         // Generate CSS
         progressCallback && progressCallback(45, 'Generating styles');
@@ -47,25 +66,25 @@ class LightweightConverter {
         files['js/app.js'] = await this.generateJS();
 
         // Generate product pages
-        const total = products.length;
-        for (let i = 0; i < products.length; i++) {
-            const product = products[i];
+        const total = normalizedProducts.length;
+        for (let i = 0; i < normalizedProducts.length; i++) {
+            const product = normalizedProducts[i];
             const progress = 50 + Math.floor((i / total) * 30);
             progressCallback && progressCallback(progress, `Generating product ${i + 1}/${total}`);
 
-            const slug = this.slugify(product.name);
+            const slug = product.slug;
             files[`products/${slug}.html`] = await this.generateProductPage(product);
         }
 
         // Generate index/catalog page
         progressCallback && progressCallback(85, 'Generating catalog');
-        files['index.html'] = await this.generateCatalogPage(products);
+        files['index.html'] = await this.generateCatalogPage(normalizedProducts);
 
         // Generate category pages
         progressCallback && progressCallback(90, 'Generating categories');
-        const categories = this.extractCategories(products);
+        const categories = this.extractCategories(normalizedProducts);
         for (const category of categories) {
-            const categoryProducts = products.filter(p =>
+            const categoryProducts = normalizedProducts.filter(p =>
                 p.categories && p.categories.some(c => c.name === category.name)
             );
             const slug = this.slugify(category.name);
@@ -295,6 +314,7 @@ class LightweightConverter {
     }
 
     async generateProductPage(product) {
+        const displayPrice = product.salePrice || product.price || product.regularPrice || '0.00';
         const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -302,7 +322,7 @@ class LightweightConverter {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${this.escapeHtml(product.name)} | ${this.escapeHtml(this.options.siteName)}</title>
-    <meta name="description" content="${this.escapeHtml(this.stripHtml(product.short_description || product.description || '').substring(0, 160))}">
+    <meta name="description" content="${this.escapeHtml(this.stripHtml(product.shortDescription || product.description || '').substring(0, 160))}">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -326,16 +346,16 @@ class LightweightConverter {
             <div class="product-info">
                 <h1>${this.escapeHtml(product.name)}</h1>
                 <div class="price">
-                    ${product.sale_price ? `<del>${this.options.currency}${product.regular_price}</del>` : ''}
-                    ${this.options.currency}${product.sale_price || product.price || product.regular_price || '0.00'}
+                    ${product.salePrice ? `<del>${this.options.currency}${product.regularPrice}</del>` : ''}
+                    ${this.options.currency}${displayPrice}
                 </div>
                 <div class="description">
-                    ${product.description || product.short_description || 'No description available.'}
+                    ${product.description || product.shortDescription || 'No description available.'}
                 </div>
                 <button class="btn" data-add-to-cart data-product='${JSON.stringify({
                     id: product.id,
                     name: product.name,
-                    price: parseFloat(product.sale_price || product.price || product.regular_price || 0),
+                    price: parseFloat(displayPrice),
                     image: product.images && product.images[0] ? product.images[0].src : ''
                 }).replace(/'/g, "&#39;")}'>
                     Add to Cart
@@ -366,20 +386,23 @@ class LightweightConverter {
     }
 
     async generateCatalogPage(products) {
-        const productCards = products.map(product => `
-            <a href="products/${this.slugify(product.name)}.html" class="product-card">
+        const productCards = products.map(product => {
+            const displayPrice = product.salePrice || product.price || product.regularPrice || '0.00';
+            return `
+            <a href="products/${product.slug}.html" class="product-card">
                 <img src="${product.images && product.images[0] ? product.images[0].src : 'https://via.placeholder.com/300x200'}"
                      alt="${this.escapeHtml(product.name)}"
                      loading="lazy">
                 <div class="product-card-body">
                     <h3>${this.escapeHtml(product.name)}</h3>
                     <div class="price">
-                        ${product.sale_price ? `<del>${this.options.currency}${product.regular_price}</del>` : ''}
-                        ${this.options.currency}${product.sale_price || product.price || product.regular_price || '0.00'}
+                        ${product.salePrice ? `<del>${this.options.currency}${product.regularPrice}</del>` : ''}
+                        ${this.options.currency}${displayPrice}
                     </div>
                 </div>
             </a>
-        `).join('');
+        `;
+        }).join('');
 
         const html = `
 <!DOCTYPE html>
@@ -437,20 +460,23 @@ class LightweightConverter {
     }
 
     async generateCategoryPage(category, products) {
-        const productCards = products.map(product => `
-            <a href="../products/${this.slugify(product.name)}.html" class="product-card">
+        const productCards = products.map(product => {
+            const displayPrice = product.salePrice || product.price || product.regularPrice || '0.00';
+            return `
+            <a href="../products/${product.slug}.html" class="product-card">
                 <img src="${product.images && product.images[0] ? product.images[0].src : 'https://via.placeholder.com/300x200'}"
                      alt="${this.escapeHtml(product.name)}"
                      loading="lazy">
                 <div class="product-card-body">
                     <h3>${this.escapeHtml(product.name)}</h3>
                     <div class="price">
-                        ${product.sale_price ? `<del>${this.options.currency}${product.regular_price}</del>` : ''}
-                        ${this.options.currency}${product.sale_price || product.price || product.regular_price || '0.00'}
+                        ${product.salePrice ? `<del>${this.options.currency}${product.regularPrice}</del>` : ''}
+                        ${this.options.currency}${displayPrice}
                     </div>
                 </div>
             </a>
-        `).join('');
+        `;
+        }).join('');
 
         const html = `
 <!DOCTYPE html>
