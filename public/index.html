@@ -45,11 +45,15 @@
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin-top: 48px;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .features { grid-template-columns: repeat(2, 1fr); }
         }
 
         .feature {
@@ -121,6 +125,16 @@
             <div class="feature-icon">📱</div>
             <h3>Mobile Ready</h3>
             <p>Responsive design included</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🔍</div>
+            <h3>SEO Optimized</h3>
+            <p>Better search rankings</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">⚙️</div>
+            <h3>PWA Support</h3>
+            <p>Works offline like an app</p>
         </div>
     </div>
 
