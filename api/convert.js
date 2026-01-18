@@ -12,6 +12,10 @@ const memoryStorage = {
     blobs: new Map()
 };
 
+// Vercel free tier has 10s timeout, so we limit products
+const MAX_PRODUCTS_FREE_TIER = 25;
+const FETCH_TIMEOUT = 8000; // 8 seconds to leave room for processing
+
 // Helper to get KV (with fallback)
 async function kvSet(key, value, options = {}) {
     try {
@@ -41,6 +45,25 @@ async function storeBlob(path, buffer) {
         memoryStorage.blobs.set(id, buffer);
         return `/api/download/${id}`;
     }
+}
+
+// Timeout wrapper
+function withTimeout(promise, ms) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+            setTimeout(() => reject(new Error(`Operation timed out after ${ms}ms`)), ms)
+        )
+    ]);
+}
+
+// Quick product fetch with limit
+async function fetchProductsQuick(connector, limit = MAX_PRODUCTS_FREE_TIER) {
+    const response = await connector.api.get('products', {
+        per_page: limit,
+        status: 'publish'
+    });
+    return response.data.map(p => connector.normalizeProduct(p));
 }
 
 module.exports = async function handler(req, res) {
@@ -114,15 +137,23 @@ module.exports = async function handler(req, res) {
             options
         }, { ex: 3600 });
 
-        // Fetch products from the platform
+        // Fetch products from the platform (with timeout and limit for free tier)
         let products;
+        const productLimit = options.limit || MAX_PRODUCTS_FREE_TIER;
         try {
-            products = await connector.exportProducts(() => {});
+            // Use quick fetch with timeout for serverless
+            products = await withTimeout(
+                fetchProductsQuick(connector, productLimit),
+                FETCH_TIMEOUT
+            );
         } catch (e) {
+            const errorMsg = e.message.includes('timed out')
+                ? `Store API is slow. Try again or reduce product limit (currently ${productLimit}).`
+                : `Failed to fetch products: ${e.message}. Please check your credentials and store URL.`;
             return res.status(400).json({
                 success: false,
                 conversionId,
-                error: `Failed to fetch products: ${e.message}. Please check your credentials and store URL.`
+                error: errorMsg
             });
         }
 
@@ -146,8 +177,8 @@ module.exports = async function handler(req, res) {
             options
         }, { ex: 3600 });
 
-        // Generate the static site
-        const converter = new LightweightConverter(options);
+        // Generate the static site (disable minification for speed in serverless)
+        const converter = new LightweightConverter({ ...options, minify: false });
         const htmlFiles = await converter.convert(products, () => {});
 
         // Update status
