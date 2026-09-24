@@ -4,17 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store Converter - Multi-Platform E-commerce to HTML5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --success: #0ea472;
+            --ink: #14141f;
+            --ink-soft: #55555f;
+            --ink-muted: #8b8b95;
+            --border: #e5e5eb;
+            --surface: #ffffff;
+            --canvas: #f2f2f6;
+            --radius-lg: 1.5rem;
+            --radius: 1rem;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% -10%, rgba(79, 70, 229, 0.10), transparent 42%),
+                radial-gradient(circle at 100% 10%, rgba(14, 164, 114, 0.10), transparent 45%),
+                var(--canvas);
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 56px 20px;
         }
         .container {
             max-width: 800px;
@@ -22,94 +43,120 @@
         }
         .hero {
             text-align: center;
-            color: white;
             margin-bottom: 40px;
         }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
+            border: 1px solid rgba(79, 70, 229, 0.16);
+            padding: 6px 14px;
+            border-radius: 999px;
+            margin-bottom: 18px;
+        }
         .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
         }
         .hero p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 1.05rem;
+            color: var(--ink-soft);
             max-width: 600px;
             margin: 0 auto;
+            line-height: 1.6;
         }
         .platforms-badge {
             display: flex;
             justify-content: center;
-            gap: 16px;
-            margin-top: 24px;
+            gap: 10px;
+            margin-top: 22px;
             flex-wrap: wrap;
         }
         .platform-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink-soft);
         }
         #converter-widget {
             margin-bottom: 40px;
         }
         .integration-docs {
-            background: white;
-            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             padding: 32px;
             margin-top: 40px;
+            box-shadow: 0 20px 40px -20px rgba(20, 20, 31, 0.12);
         }
         .integration-docs h2 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            color: #1f2937;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 10px;
+            color: var(--ink);
         }
         .integration-docs p {
-            color: #6b7280;
+            color: var(--ink-soft);
             margin-bottom: 24px;
         }
         .code-block {
-            background: #1e293b;
-            border-radius: 8px;
+            background: #14141a;
+            border-radius: var(--radius);
             padding: 20px;
             overflow-x: auto;
             margin-bottom: 24px;
         }
         .code-block code {
-            color: #e2e8f0;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 14px;
-            line-height: 1.6;
+            color: #e5e5eb;
+            font-family: 'SF Mono', Monaco, 'Menlo', monospace;
+            font-size: 13px;
+            line-height: 1.7;
         }
         .code-block .comment {
-            color: #64748b;
+            color: #6b6b76;
         }
         .code-block .string {
-            color: #a5d6ff;
+            color: #8ecdff;
         }
         .code-block .keyword {
-            color: #ff7b72;
+            color: #ff9a8a;
         }
         .code-block .function {
-            color: #d2a8ff;
+            color: #c9a9ff;
         }
         .tabs {
             display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 6px;
+            margin-bottom: 18px;
         }
         .tab {
-            padding: 8px 16px;
-            border: none;
-            background: #f1f5f9;
-            border-radius: 6px;
+            padding: 9px 16px;
+            border: 1px solid var(--border);
+            background: var(--canvas);
+            border-radius: 999px;
             cursor: pointer;
-            font-size: 14px;
-            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            transition: all 0.18s ease;
+        }
+        .tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
         }
         .tab.active {
-            background: #2563eb;
+            background: var(--primary);
+            border-color: var(--primary);
             color: white;
         }
         .tab-content {
@@ -121,22 +168,24 @@
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            gap: 14px;
             margin-top: 24px;
         }
         .feature {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--canvas);
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: var(--radius);
         }
         .feature h4 {
-            font-size: 16px;
-            margin-bottom: 8px;
-            color: #1f2937;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--ink);
         }
         .feature p {
-            font-size: 14px;
-            color: #6b7280;
+            font-size: 13px;
+            color: var(--ink-soft);
             margin: 0;
         }
     </style>
@@ -144,13 +193,14 @@
 <body>
     <div class="container">
         <div class="hero">
+            <span class="eyebrow">⚡ Local development server</span>
             <h1>Store Converter</h1>
             <p>Convert your e-commerce store to a blazing-fast HTML5 static site. Support for multiple platforms with a simple embeddable widget.</p>
             <div class="platforms-badge">
-                <span class="platform-badge">WooCommerce</span>
-                <span class="platform-badge">Shopify</span>
-                <span class="platform-badge">Wix</span>
-                <span class="platform-badge">Squarespace</span>
+                <span class="platform-badge">🛍️ WooCommerce</span>
+                <span class="platform-badge">🟢 Shopify</span>
+                <span class="platform-badge">⬛ Wix</span>
+                <span class="platform-badge">⬜ Squarespace</span>
             </div>
         </div>
 
@@ -183,7 +233,7 @@
   <span class="function">StoreConverter</span>.<span class="function">init</span>(<span class="string">'#store-converter'</span>, {
     <span class="function">apiEndpoint</span>: <span class="string">'http://localhost:3002/api'</span>,
     <span class="function">theme</span>: <span class="string">'light'</span>,
-    <span class="function">primaryColor</span>: <span class="string">'#2563eb'</span>,
+    <span class="function">primaryColor</span>: <span class="string">'#4f46e5'</span>,
     <span class="function">showPlatforms</span>: [<span class="string">'woocommerce'</span>, <span class="string">'shopify'</span>, <span class="string">'wix'</span>, <span class="string">'squarespace'</span>],
     <span class="function">onComplete</span>: (<span class="keyword">result</span>) =&gt; {
       console.<span class="function">log</span>(<span class="string">'Conversion complete!'</span>, result);
@@ -252,7 +302,7 @@ POST /api/convert
   <span class="string">"shopDomain"</span>: <span class="string">"store.myshopify.com"</span>,
   <span class="string">"accessToken"</span>: <span class="string">"shpat_xxx"</span>,
   <span class="string">"siteName"</span>: <span class="string">"My Store"</span>,
-  <span class="string">"primaryColor"</span>: <span class="string">"#2563eb"</span>
+  <span class="string">"primaryColor"</span>: <span class="string">"#4f46e5"</span>
 }
 
 <span class="comment"># Response: { "conversionId": "uuid" }</span>
@@ -297,7 +347,7 @@ GET /api/preview/:conversionId</code>
         StoreConverter.init('#converter-widget', {
             apiEndpoint: '/api',
             theme: 'light',
-            primaryColor: '#667eea',
+            primaryColor: '#4f46e5',
             enableDemo: true,
             onComplete: (result) => {
                 console.log('Conversion complete!', result);

@@ -17,7 +17,7 @@ class ConversionWizard {
             store: {
                 siteName: 'My Store',
                 siteDescription: 'Your Online Store - Fast, Modern, Beautiful',
-                primaryColor: '#2563eb',
+                primaryColor: '#4f46e5',
                 currency: 'USD',
                 currencySymbol: '$'
             },
@@ -192,7 +192,7 @@ class ConversionWizard {
     }
 
     updateColorPreview(color) {
-        color = color || document.getElementById('primary-color')?.value || '#2563eb';
+        color = color || document.getElementById('primary-color')?.value || '#4f46e5';
         this.config.store.primaryColor = color;
 
         // Update CSS variable for preview
@@ -406,7 +406,7 @@ class ConversionWizard {
             case 3:
                 this.config.store.siteName = document.getElementById('site-name')?.value.trim() || 'My Store';
                 this.config.store.siteDescription = document.getElementById('site-description')?.value.trim() || '';
-                this.config.store.primaryColor = document.getElementById('primary-color')?.value || '#2563eb';
+                this.config.store.primaryColor = document.getElementById('primary-color')?.value || '#4f46e5';
                 this.config.store.currency = document.getElementById('currency')?.value || 'USD';
                 break;
 
@@ -746,7 +746,7 @@ class ConversionWizard {
             store: {
                 siteName: 'My Store',
                 siteDescription: 'Your Online Store - Fast, Modern, Beautiful',
-                primaryColor: '#2563eb',
+                primaryColor: '#4f46e5',
                 currency: 'USD',
                 currencySymbol: '$'
             },

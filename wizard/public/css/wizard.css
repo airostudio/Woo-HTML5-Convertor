@@ -4,29 +4,29 @@
 
 /* CSS Variables */
 :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --primary-light: #dbeafe;
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #eef2ff;
     --secondary: #64748b;
-    --success: #10b981;
-    --success-light: #d1fae5;
-    --error: #ef4444;
-    --error-light: #fee2e2;
-    --warning: #f59e0b;
-    --text: #1f2937;
-    --text-light: #6b7280;
-    --text-muted: #9ca3af;
+    --success: #0ea472;
+    --success-light: #e3f9ef;
+    --error: #e0393e;
+    --error-light: #fdecec;
+    --warning: #d97706;
+    --text: #14141f;
+    --text-light: #5b5b68;
+    --text-muted: #90909c;
     --bg: #ffffff;
-    --bg-alt: #f8fafc;
-    --bg-dark: #f1f5f9;
-    --border: #e2e8f0;
-    --border-dark: #cbd5e1;
-    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --radius: 0.5rem;
-    --radius-lg: 0.75rem;
-    --transition: 200ms ease;
+    --bg-alt: #f6f6f9;
+    --bg-dark: #eceef3;
+    --border: #e5e5eb;
+    --border-dark: #d3d3dd;
+    --shadow: 0 1px 2px 0 rgb(20 20 31 / 0.05), 0 1px 3px -1px rgb(20 20 31 / 0.08);
+    --shadow-md: 0 6px 16px -4px rgb(20 20 31 / 0.10), 0 2px 6px -2px rgb(20 20 31 / 0.06);
+    --shadow-lg: 0 20px 40px -12px rgb(20 20 31 / 0.18), 0 8px 16px -8px rgb(20 20 31 / 0.10);
+    --radius: 0.75rem;
+    --radius-lg: 1.25rem;
+    --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Reset */
@@ -45,7 +45,10 @@ body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
     color: var(--text);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background:
+        radial-gradient(circle at 15% 0%, rgba(79, 70, 229, 0.08), transparent 45%),
+        radial-gradient(circle at 100% 20%, rgba(14, 164, 114, 0.08), transparent 45%),
+        #f2f2f6;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -59,7 +62,8 @@ body {
     max-width: 1000px;
     background: var(--bg);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg), 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -206,7 +210,7 @@ body {
     justify-content: center;
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, var(--primary-light), #c7d2fe);
+    background: linear-gradient(135deg, var(--primary-light), #d9d4fb);
     border-radius: 50%;
     color: var(--primary);
     margin-bottom: 1.5rem;
