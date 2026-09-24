@@ -188,6 +188,195 @@
             color: var(--ink-soft);
             margin: 0;
         }
+
+        /* FAQ */
+        .faq {
+            margin-top: 40px;
+        }
+
+        .faq-heading {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .faq-heading .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
+            border: 1px solid rgba(79, 70, 229, 0.16);
+            padding: 6px 14px;
+            border-radius: 999px;
+            margin-bottom: 14px;
+        }
+
+        .faq-heading h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .faq-heading p {
+            color: var(--ink-soft);
+            font-size: 14px;
+        }
+
+        .faq-search {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .faq-search input {
+            width: 100%;
+            padding: 13px 16px 13px 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 999px;
+            background: var(--canvas);
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            transition: all 0.18s ease;
+        }
+
+        .faq-search input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+
+        .faq-search::before {
+            content: '🔍';
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        .faq-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .faq-filter {
+            padding: 7px 15px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: var(--canvas);
+            color: var(--ink-soft);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .faq-filter:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .faq-filter.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .faq-item {
+            background: var(--canvas);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: border-color 0.18s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(79, 70, 229, 0.3);
+        }
+
+        .faq-item.hidden {
+            display: none;
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--ink);
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .faq-question .faq-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--surface);
+            color: var(--ink-soft);
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .faq-item.open .faq-question .faq-icon {
+            background: var(--primary);
+            color: white;
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease;
+        }
+
+        .faq-answer-inner {
+            padding: 0 18px 18px;
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: var(--ink-soft);
+        }
+
+        .faq-answer-inner ul {
+            margin: 8px 0 0 18px;
+        }
+
+        .faq-answer-inner li {
+            margin-bottom: 4px;
+        }
+
+        .faq-empty {
+            text-align: center;
+            padding: 32px 0;
+            color: var(--ink-muted);
+            font-size: 14px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -338,6 +527,148 @@ GET /api/preview/:conversionId</code>
                 </div>
             </div>
         </div>
+
+        <!-- Help & FAQ -->
+        <div class="faq" id="faq">
+            <div class="faq-heading">
+                <span class="eyebrow">💬 Help &amp; FAQ</span>
+                <h2>How we find your product details</h2>
+                <p>Everything the converter reads from your store before it builds your static site.</p>
+            </div>
+
+            <div class="faq-search">
+                <input type="text" id="faq-search-input" placeholder="Search the FAQ, e.g. &quot;variants&quot; or &quot;Shopify&quot;" autocomplete="off">
+            </div>
+
+            <div class="faq-filters" id="faq-filters">
+                <button class="faq-filter active" data-category="all">All</button>
+                <button class="faq-filter" data-category="data">Product data</button>
+                <button class="faq-filter" data-category="platforms">Platforms</button>
+                <button class="faq-filter" data-category="security">Security</button>
+            </div>
+
+            <div class="faq-list" id="faq-list">
+                <div class="faq-item" data-category="data">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What product details does the converter actually pull in?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            For every product we read the same fields your storefront already shows shoppers, plus the metadata search engines need:
+                            <ul>
+                                <li>Name, short &amp; full description</li>
+                                <li>Regular price, sale price and currency</li>
+                                <li>SKU, stock status and quantity</li>
+                                <li>All gallery images, in full resolution</li>
+                                <li>Variants and options (size, color, material, etc.)</li>
+                                <li>Categories, tags and collections</li>
+                                <li>Weight/dimensions and related or cross-sell products</li>
+                                <li>SEO slug, meta title and meta description, when available</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="data">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>How are product images handled?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Every image attached to a product — including gallery and variant-specific images — is downloaded, compressed, and converted to modern formats like WebP automatically, so your static site loads fast without any manual image work.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="data">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What about variants, like size or color options?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            All variants are captured with their own price, stock level, SKU and image, and rendered as selectable options on the generated product page — so a shopper can still pick "Red / Medium" the same way they could on your original store.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="data">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Will out-of-stock products show correctly?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Yes. Stock status and quantity are read directly from your store, so sold-out items are automatically marked unavailable instead of showing an "Add to cart" button.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="platforms">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>How does this work for WooCommerce?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            We connect with your Consumer Key and Consumer Secret over the official WooCommerce REST API, using read-only permissions to fetch products, variations, categories and media. Nothing is ever written back to your store.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="platforms">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>How does this work for Shopify, Wix and Squarespace?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Each platform has its own official store API — Shopify's Admin API, Wix's Stores Catalog API, and Squarespace's Commerce API. We use your access token to read the same catalog data (products, variants, collections and image URLs) in a read-only way, so the process feels identical no matter which platform you're on.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="security">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is my store data and API key safe?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Your credentials are only used for the duration of the conversion request and are never stored. Read-only access is all the converter ever asks for — it can't edit products, change settings, or place orders on your store.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="security">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What isn't included in the conversion?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Live behavior like checkout, payment processing and account logins can't be "static" — those stay with your original store or a checkout provider you link to. The cart itself still works using your browser's local storage, so shoppers can add items and check out through your existing payment flow.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="data">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>How long does a full product export take?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            It depends on your catalog size and image count, but most stores with a few hundred products finish in well under a minute — you can watch each stage (connect, export, generate, package) live in the progress panel above.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="faq-empty" id="faq-empty">No matching questions — try a different search term.</p>
+        </div>
     </div>
 
     <!-- Initialize the widget -->
@@ -366,6 +697,64 @@ GET /api/preview/:conversionId</code>
                 document.querySelector(`.tab-content[data-tab="${tabId}"]`).classList.add('active');
             });
         });
+
+        // FAQ accordion + search/filter
+        (function() {
+            const list = document.getElementById('faq-list');
+            const items = Array.from(list.querySelectorAll('.faq-item'));
+            const searchInput = document.getElementById('faq-search-input');
+            const filters = document.querySelectorAll('.faq-filter');
+            const emptyState = document.getElementById('faq-empty');
+            let activeCategory = 'all';
+
+            items.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+
+                question.addEventListener('click', () => {
+                    const isOpen = item.classList.contains('open');
+
+                    items.forEach(other => {
+                        other.classList.remove('open');
+                        other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                        other.querySelector('.faq-answer').style.maxHeight = null;
+                    });
+
+                    if (!isOpen) {
+                        item.classList.add('open');
+                        question.setAttribute('aria-expanded', 'true');
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                    }
+                });
+            });
+
+            function applyFilters() {
+                const query = searchInput.value.trim().toLowerCase();
+                let visibleCount = 0;
+
+                items.forEach(item => {
+                    const matchesCategory = activeCategory === 'all' || item.dataset.category === activeCategory;
+                    const matchesQuery = !query || item.textContent.toLowerCase().includes(query);
+                    const visible = matchesCategory && matchesQuery;
+
+                    item.classList.toggle('hidden', !visible);
+                    if (visible) visibleCount++;
+                });
+
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+
+            searchInput.addEventListener('input', applyFilters);
+
+            filters.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filters.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeCategory = btn.dataset.category;
+                    applyFilters();
+                });
+            });
+        })();
     </script>
 </body>
 </html>

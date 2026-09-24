@@ -39,7 +39,71 @@ class ConversionWizard {
 
     init() {
         this.bindEvents();
+        this.bindFaqEvents();
         this.updateColorPreview();
+    }
+
+    bindFaqEvents() {
+        const list = document.getElementById('faq-list');
+        if (!list) return;
+
+        const items = Array.from(list.querySelectorAll('.faq-item'));
+        const searchInput = document.getElementById('faq-search-input');
+        const filters = document.querySelectorAll('.faq-filter');
+        const emptyState = document.getElementById('faq-empty');
+        let activeCategory = 'all';
+
+        items.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+
+            question.addEventListener('click', () => {
+                const isOpen = item.classList.contains('open');
+
+                items.forEach(other => {
+                    other.classList.remove('open');
+                    other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                    other.querySelector('.faq-answer').style.maxHeight = null;
+                });
+
+                if (!isOpen) {
+                    item.classList.add('open');
+                    question.setAttribute('aria-expanded', 'true');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
+        });
+
+        const applyFilters = () => {
+            const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const matchesCategory = activeCategory === 'all' || item.dataset.category === activeCategory;
+                const matchesQuery = !query || item.textContent.toLowerCase().includes(query);
+                const visible = matchesCategory && matchesQuery;
+
+                item.classList.toggle('hidden', !visible);
+                if (visible) visibleCount++;
+            });
+
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        };
+
+        if (searchInput) {
+            searchInput.addEventListener('input', applyFilters);
+        }
+
+        filters.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filters.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeCategory = btn.dataset.category;
+                applyFilters();
+            });
+        });
     }
 
     bindEvents() {

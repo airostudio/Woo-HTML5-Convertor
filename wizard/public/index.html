@@ -145,6 +145,147 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="faq-section" id="faq">
+                        <div class="faq-heading">
+                            <span class="faq-eyebrow">💬 Help &amp; FAQ</span>
+                            <h3>How we find your product details</h3>
+                            <p>Everything the converter reads from your store before it builds your static site.</p>
+                        </div>
+
+                        <div class="faq-search">
+                            <input type="text" id="faq-search-input" placeholder="Search the FAQ, e.g. &quot;variants&quot; or &quot;Shopify&quot;" autocomplete="off">
+                        </div>
+
+                        <div class="faq-filters" id="faq-filters">
+                            <button type="button" class="faq-filter active" data-category="all">All</button>
+                            <button type="button" class="faq-filter" data-category="data">Product data</button>
+                            <button type="button" class="faq-filter" data-category="platforms">Platforms</button>
+                            <button type="button" class="faq-filter" data-category="security">Security</button>
+                        </div>
+
+                        <div class="faq-list" id="faq-list">
+                            <div class="faq-item" data-category="data">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>What product details does the converter actually pull in?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        For every product we read the same fields your storefront already shows shoppers, plus the metadata search engines need:
+                                        <ul>
+                                            <li>Name, short &amp; full description</li>
+                                            <li>Regular price, sale price and currency</li>
+                                            <li>SKU, stock status and quantity</li>
+                                            <li>All gallery images, in full resolution</li>
+                                            <li>Variants and options (size, color, material, etc.)</li>
+                                            <li>Categories, tags and collections</li>
+                                            <li>Weight/dimensions and related or cross-sell products</li>
+                                            <li>SEO slug, meta title and meta description, when available</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="data">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>How are product images handled?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        Every image attached to a product — including gallery and variant-specific images — is downloaded, compressed, and converted to modern formats like WebP automatically, so your static site loads fast without any manual image work.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="data">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>What about variants, like size or color options?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        All variants are captured with their own price, stock level, SKU and image, and rendered as selectable options on the generated product page — so a shopper can still pick "Red / Medium" the same way they could on your original store.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="data">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>Will out-of-stock products show correctly?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        Yes. Stock status and quantity are read directly from your store, so sold-out items are automatically marked unavailable instead of showing an "Add to cart" button.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="platforms">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>How does this work for WooCommerce?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        We connect with your Consumer Key and Consumer Secret over the official WooCommerce REST API, using read-only permissions to fetch products, variations, categories and media. Nothing is ever written back to your store.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="platforms">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>How does this work for Shopify, Wix and Squarespace?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        Each platform has its own official store API — Shopify's Admin API, Wix's Stores Catalog API, and Squarespace's Commerce API. We use your access token to read the same catalog data (products, variants, collections and image URLs) in a read-only way, so the process feels identical no matter which platform you're on.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="security">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>Is my store data and API key safe?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        Your credentials are only used for the duration of the conversion request and are never stored. Read-only access is all the converter ever asks for — it can't edit products, change settings, or place orders on your store.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="security">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>What isn't included in the conversion?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        Live behavior like checkout, payment processing and account logins can't be "static" — those stay with your original store or a checkout provider you link to. The cart itself still works using your browser's local storage, so shoppers can add items and check out through your existing payment flow.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item" data-category="data">
+                                <button type="button" class="faq-question" aria-expanded="false">
+                                    <span>How long does a full product export take?</span>
+                                    <span class="faq-icon">+</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        It depends on your catalog size and image count, but most stores with a few hundred products finish in well under a minute — you'll watch each stage (connect, export, generate, package) live in step 5.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="faq-empty" id="faq-empty">No matching questions — try a different search term.</p>
+                    </div>
                 </div>
             </section>
 
