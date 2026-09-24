@@ -17,89 +17,90 @@ module.exports = async function handler(req, res) {
 
     // Styles
     const styles = \`
-        .sc-widget { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; }
+        .sc-widget { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; }
         .sc-widget * { box-sizing: border-box; }
-        .sc-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 24px; }
-        .sc-title { font-size: 24px; font-weight: 600; margin: 0 0 8px; color: #1a1a1a; }
-        .sc-subtitle { color: #666; margin: 0 0 24px; }
-        .sc-platforms { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
-        .sc-platform { border: 2px solid #e5e7eb; border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s; text-align: center; }
-        .sc-platform:hover { border-color: #3b82f6; background: #f8fafc; }
-        .sc-platform.selected { border-color: #3b82f6; background: #eff6ff; }
-        .sc-platform-icon { width: 48px; height: 48px; margin: 0 auto 8px; }
-        .sc-platform-name { font-weight: 500; color: #1a1a1a; }
+        .sc-card { background: #ffffff; border: 1px solid #e5e5eb; border-radius: 20px; box-shadow: 0 20px 40px -16px rgba(20,20,31,0.14), 0 2px 8px -2px rgba(20,20,31,0.06); padding: 32px; }
+        .sc-title { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 6px; color: #14141f; }
+        .sc-subtitle { color: #6b6b76; font-size: 14px; margin: 0 0 28px; }
+        .sc-platforms { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px; }
+        .sc-platform { border: 1.5px solid #e5e5eb; border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.18s cubic-bezier(0.4,0,0.2,1); text-align: center; background: #fbfbfd; }
+        .sc-platform:hover { border-color: #3b82f6; background: #f5f6ff; transform: translateY(-1px); }
+        .sc-platform.selected { border-color: #3b82f6; background: #eef1ff; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+        .sc-platform-icon { width: 40px; height: 40px; margin: 0 auto 10px; font-size: 28px; display: flex; align-items: center; justify-content: center; }
+        .sc-platform-name { font-weight: 600; font-size: 14px; color: #14141f; }
         .sc-form { display: none; }
         .sc-form.active { display: block; }
         .sc-field { margin-bottom: 16px; }
-        .sc-label { display: block; font-weight: 500; margin-bottom: 6px; color: #374151; }
-        .sc-input { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
-        .sc-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-        .sc-btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .sc-btn-primary { background: #3b82f6; color: white; }
-        .sc-btn-primary:hover { background: #2563eb; }
-        .sc-btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
+        .sc-label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #3f3f47; }
+        .sc-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e5eb; border-radius: 12px; font-size: 14px; font-family: inherit; background: #fbfbfd; transition: all 0.18s ease; }
+        .sc-input:focus { outline: none; border-color: #3b82f6; background: #fff; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+        .sc-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.18s ease; font-family: inherit; }
+        .sc-btn-primary { background: #3b82f6; color: white; box-shadow: 0 8px 16px -6px rgba(59,130,246,0.45); }
+        .sc-btn-primary:hover { background: #2f6fe0; transform: translateY(-1px); box-shadow: 0 10px 20px -6px rgba(59,130,246,0.5); }
+        .sc-btn-primary:disabled { background: #c7c7d1; box-shadow: none; cursor: not-allowed; transform: none; }
 
         /* Enhanced Progress Styles */
-        .sc-progress { display: none; padding: 24px 0; }
+        .sc-progress { display: none; padding: 8px 0; }
         .sc-progress.active { display: block; }
 
         .sc-progress-header { display: flex; align-items: center; margin-bottom: 20px; }
         .sc-progress-icon { width: 48px; height: 48px; margin-right: 16px; position: relative; }
         .sc-progress-ring { width: 48px; height: 48px; }
-        .sc-progress-ring-circle { fill: none; stroke: #e5e7eb; stroke-width: 4; }
+        .sc-progress-ring-circle { fill: none; stroke: #eceef3; stroke-width: 4; }
         .sc-progress-ring-progress { fill: none; stroke: #3b82f6; stroke-width: 4; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 0.3s; }
-        .sc-progress-percent { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; font-weight: 600; color: #3b82f6; }
+        .sc-progress-percent { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; font-weight: 700; color: #3b82f6; }
 
         .sc-progress-info { flex: 1; }
-        .sc-progress-stage { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .sc-progress-status { font-size: 14px; color: #666; }
+        .sc-progress-stage { font-size: 17px; font-weight: 700; color: #14141f; margin-bottom: 2px; }
+        .sc-progress-status { font-size: 13px; color: #6b6b76; }
 
         /* Main Progress Bar */
         .sc-main-progress { margin-bottom: 24px; }
-        .sc-main-progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #666; }
-        .sc-main-progress-bar { height: 10px; background: #e5e7eb; border-radius: 5px; overflow: hidden; }
-        .sc-main-progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 5px; transition: width 0.3s ease; position: relative; }
-        .sc-main-progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: sc-shimmer 1.5s infinite; }
+        .sc-main-progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: #6b6b76; font-weight: 500; }
+        .sc-main-progress-bar { height: 8px; background: #eceef3; border-radius: 999px; overflow: hidden; }
+        .sc-main-progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #0ea472); border-radius: 999px; transition: width 0.3s ease; position: relative; }
+        .sc-main-progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); animation: sc-shimmer 1.5s infinite; }
         @keyframes sc-shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
         /* Sub-task Progress */
-        .sc-subtasks { background: #f9fafb; border-radius: 8px; padding: 16px; }
-        .sc-subtasks-title { font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .sc-subtasks { background: #f8f8fb; border: 1px solid #eceef3; border-radius: 14px; padding: 14px 16px; }
+        .sc-subtasks-title { font-size: 11px; font-weight: 700; color: #8b8b95; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
 
-        .sc-subtask { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+        .sc-subtask { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #eceef3; }
         .sc-subtask:last-child { border-bottom: none; }
         .sc-subtask-icon { width: 20px; height: 20px; margin-right: 12px; display: flex; align-items: center; justify-content: center; }
-        .sc-subtask-spinner { width: 16px; height: 16px; border: 2px solid #e5e7eb; border-top-color: #3b82f6; border-radius: 50%; animation: sc-spin 0.8s linear infinite; }
-        .sc-subtask-check { color: #10b981; font-size: 16px; }
-        .sc-subtask-pending { width: 8px; height: 8px; background: #d1d5db; border-radius: 50%; }
+        .sc-subtask-spinner { width: 16px; height: 16px; border: 2px solid #e5e5eb; border-top-color: #3b82f6; border-radius: 50%; animation: sc-spin 0.8s linear infinite; }
+        .sc-subtask-check { color: #0ea472; font-size: 16px; }
+        .sc-subtask-pending { width: 7px; height: 7px; background: #d3d3dd; border-radius: 50%; }
         .sc-subtask-info { flex: 1; }
-        .sc-subtask-name { font-size: 14px; color: #374151; font-weight: 500; }
-        .sc-subtask-detail { font-size: 12px; color: #9ca3af; margin-top: 2px; }
-        .sc-subtask-progress { width: 60px; }
-        .sc-subtask-bar { height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden; }
+        .sc-subtask-name { font-size: 13px; color: #3f3f47; font-weight: 600; }
+        .sc-subtask-detail { font-size: 11px; color: #90909c; margin-top: 1px; }
+        .sc-subtask-progress { width: 56px; }
+        .sc-subtask-bar { height: 4px; background: #eceef3; border-radius: 999px; overflow: hidden; }
         .sc-subtask-fill { height: 100%; background: #3b82f6; transition: width 0.3s; }
 
         @keyframes sc-spin { to { transform: rotate(360deg); } }
         @keyframes sc-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        .sc-subtask.active .sc-subtask-name { color: #1a1a1a; }
-        .sc-subtask.completed .sc-subtask-name { color: #10b981; }
-        .sc-subtask.pending .sc-subtask-name { color: #9ca3af; }
+        .sc-subtask.active .sc-subtask-name { color: #14141f; }
+        .sc-subtask.completed .sc-subtask-name { color: #0ea472; }
+        .sc-subtask.pending .sc-subtask-name { color: #90909c; }
 
         /* Live Log */
-        .sc-live-log { margin-top: 16px; background: #1a1a1a; border-radius: 8px; padding: 12px; max-height: 120px; overflow-y: auto; }
-        .sc-log-entry { font-family: 'Monaco', 'Menlo', monospace; font-size: 11px; color: #10b981; padding: 2px 0; animation: sc-fade-in 0.3s ease; }
-        .sc-log-entry.info { color: #3b82f6; }
-        .sc-log-entry.warn { color: #f59e0b; }
-        .sc-log-entry.error { color: #ef4444; }
-        .sc-log-time { color: #6b7280; margin-right: 8px; }
+        .sc-live-log { margin-top: 14px; background: #14141a; border-radius: 12px; padding: 12px 14px; max-height: 120px; overflow-y: auto; }
+        .sc-log-entry { font-family: 'SF Mono', Monaco, 'Menlo', monospace; font-size: 11px; color: #6ee7b7; padding: 2px 0; animation: sc-fade-in 0.3s ease; }
+        .sc-log-entry.info { color: #7dabff; }
+        .sc-log-entry.warn { color: #fbbf6b; }
+        .sc-log-entry.error { color: #ff8a8a; }
+        .sc-log-time { color: #6b6b76; margin-right: 8px; }
         @keyframes sc-fade-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
-        .sc-result { display: none; text-align: center; padding: 40px 0; }
+        .sc-result { display: none; text-align: center; padding: 32px 0 8px; }
         .sc-result.active { display: block; }
-        .sc-result-icon { font-size: 48px; margin-bottom: 16px; }
-        .sc-result-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-        .sc-error { color: #dc2626; background: #fef2f2; padding: 12px; border-radius: 8px; margin-bottom: 16px; display: none; }
+        .sc-result-icon { font-size: 44px; margin-bottom: 12px; }
+        .sc-result-title { font-size: 19px; font-weight: 700; margin-bottom: 6px; color: #14141f; }
+        #sc-result-text { color: #6b6b76; font-size: 14px; margin-bottom: 20px; }
+        .sc-error { color: #b3261e; background: #fdecec; border: 1px solid #f7c9c7; padding: 12px 14px; border-radius: 12px; margin-bottom: 16px; display: none; font-size: 13px; }
         .sc-error.active { display: block; }
     \`;
 
